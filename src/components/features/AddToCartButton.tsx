@@ -2,7 +2,7 @@
 
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface AddToCartButtonProps {
   product: {

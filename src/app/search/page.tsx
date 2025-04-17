@@ -6,6 +6,7 @@ import ProductCard from '@/components/features/ProductCard';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 
+// 검색 결과 인터페이스 정의
 interface SearchResult {
   id: string;
   name: string;
@@ -13,27 +14,30 @@ interface SearchResult {
   price: number;
   rating: number;
   image: string;
+  keywords?: string[];
 }
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('q');
+  const query = searchParams?.get('q') || '';
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
-
+  
   useEffect(() => {
     const fetchSearchResults = async () => {
       setIsLoading(true);
+      
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query || '')}`);
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         if (!response.ok) throw new Error('검색 중 오류가 발생했습니다.');
         const data = await response.json();
         setResults(data);
         
         // 검색 결과에서 고유한 키워드 추출 (카테고리로 사용)
         const uniqueKeywords = new Set<string>();
-        data.forEach((product: any) => {
+        data.forEach((product: SearchResult) => {
           if (product.keywords) {
             product.keywords.forEach((keyword: string) => uniqueKeywords.add(keyword));
           }
@@ -75,8 +79,8 @@ export default function SearchPage() {
             <div className="flex items-center mb-4">
               <Search className="w-6 h-6 text-[#FF4500] mr-3" />
               <h1 className="text-3xl font-bold text-gray-900">
-                '{query}' 검색 결과
-        </h1>
+                &apos;{query}&apos; 검색 결과
+              </h1>
             </div>
             {!isLoading && results.length > 0 && (
               <p className="text-lg text-gray-600">

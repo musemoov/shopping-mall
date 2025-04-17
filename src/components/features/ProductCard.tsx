@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Heart } from 'lucide-react';
 
 interface ProductCardProps {
   id: string;
@@ -22,6 +23,7 @@ export default function ProductCard({
   image,
 }: ProductCardProps) {
   const router = useRouter();
+  const [isWishlisted, setIsWishlisted] = useState(false);
   
   const formatPrice = (price: number) => {
     return price.toLocaleString('ko-KR');
@@ -36,11 +38,26 @@ export default function ProductCard({
     router.push(`/shop/${id}/buy`);  // 구매 페이지로 이동
   };
 
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();  // 이벤트 버블링 방지
+    setIsWishlisted(!isWishlisted);
+    // 실제 구현에서는 여기서 위시리스트 데이터를 저장하는 API 호출이 필요합니다
+  };
+
   return (
     <div className="group relative cursor-pointer" onClick={handleProductClick}>
       <div className="absolute -inset-3 bg-white rounded-2xl transition-all duration-200 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] opacity-0 group-hover:opacity-100" />
       <div className="relative bg-white rounded-xl">
         <div className="relative aspect-square bg-[#F8F9FA] rounded-xl p-4 overflow-hidden">
+          <button 
+            className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors duration-200"
+            onClick={handleWishlistClick}
+          >
+            <Heart 
+              size={18} 
+              className={`${isWishlisted ? 'fill-[#FF4500] text-[#FF4500]' : 'text-gray-400'} transition-colors duration-200`} 
+            />
+          </button>
           <Image
             src={image}
             alt={name}
