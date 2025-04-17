@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import ProductCard from '@/components/features/ProductCard';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
@@ -17,7 +17,8 @@ interface SearchResult {
   keywords?: string[];
 }
 
-export default function SearchPage() {
+// 검색 폼 컴포넌트
+function SearchForm() {
   const searchParams = useSearchParams();
   const query = searchParams?.get('q') || '';
   
@@ -149,5 +150,22 @@ export default function SearchPage() {
       </div>
     </div>
     </main>
+  );
+}
+
+// 로딩 상태 UI
+function SearchPageLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-3 border-b-3 border-[#FF4500]"></div>
+    </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<SearchPageLoading />}>
+      <SearchForm />
+    </Suspense>
   );
 } 

@@ -1,8 +1,6 @@
 'use client';
 
 import ProductCard from '@/components/features/ProductCard';
-import Link from 'next/link';
-import { Heart } from 'lucide-react';
 
 const SHOP_PRODUCTS = [
   {

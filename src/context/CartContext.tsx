@@ -133,28 +133,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      const { items, totalItems, totalPrice } = JSON.parse(savedCart);
-      
-      // 저장된 장바구니 데이터를 리듀서 상태로 복원
-      items.forEach((item: CartItem) => {
-        dispatch({ 
-          type: 'ADD_ITEM', 
-          payload: { 
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-          } 
-        });
-
-        // 수량 설정 (기본값은 1이므로 1개 이상이면 수량 업데이트)
-        if (item.quantity > 1) {
-          dispatch({
-            type: 'UPDATE_QUANTITY',
-            payload: { id: item.id, quantity: item.quantity }
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        
+        // 기존 상태를 완전히 대체하는 방식으로 변경
+        if (parsedCart && parsedCart.items) {
+          dispatch({ type: 'CLEAR_CART' });
+          
+          parsedCart.items.forEach((item: CartItem) => {
+            dispatch({ 
+              type: 'ADD_ITEM', 
+              payload: { 
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                image: item.image,
+              } 
+            });
+            
+            if (item.quantity > 1) {
+              dispatch({
+                type: 'UPDATE_QUANTITY',
+                payload: { id: item.id, quantity: item.quantity }
+              });
+            }
           });
         }
-      });
+      } catch (err) {
+        console.error('장바구니 데이터 파싱 오류:', err);
+      }
     }
   }, []);
   

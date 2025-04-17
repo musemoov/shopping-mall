@@ -1,7 +1,6 @@
 'use client';
 
 import { Target, Users, Shield, Zap } from 'lucide-react';
-import Image from 'next/image';
 
 const values = [
   {
