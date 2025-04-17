@@ -6,7 +6,7 @@ const contactInfo = [
   {
     icon: MapPin,
     title: '주소',
-    content: '서울특별시 강남구 테헤란로 123 퀵카트타워 15층',
+    content: '서울특별시 강남구 테헤란로',
   },
   {
     icon: Phone,
